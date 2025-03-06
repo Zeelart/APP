@@ -1,18 +1,10 @@
 from django.db import models
-from django.utils import timezone
 
 class Expense(models.Model):
-    CATEGORY_CHOICES = [
-        ('food', 'Food'),
-        ('transport', 'Transport'),
-        ('entertainment', 'Entertainment'),
-        ('other', 'Other'),
-    ]
-    
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
-    description = models.TextField(blank=True)
-    date = models.DateField(default=timezone.now)
+    category = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True)
+    date = models.DateField()
 
     def to_dict(self):
         return {
@@ -20,5 +12,5 @@ class Expense(models.Model):
             'amount': float(self.amount),
             'category': self.category,
             'description': self.description,
-            'date': self.date.strftime('%Y-%m-%d')
+            'date': self.date.isoformat() if self.date else None
         }
