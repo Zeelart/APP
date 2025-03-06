@@ -2,11 +2,23 @@ from django.db import models
 from django.utils import timezone
 
 class Expense(models.Model):
-    # Поля модели
-    amount = models.DecimalField(max_digits=10, decimal_places=2)  # Сумма расхода
-    category = models.CharField(max_length=100)  # Категория расхода
-    description = models.TextField(blank=True, null=True)  # Описание (необязательное поле)
-    date = models.DateTimeField(default=timezone.now)  # Дата расхода (по умолчанию текущая)
+    CATEGORY_CHOICES = [
+        ('food', 'Food'),
+        ('transport', 'Transport'),
+        ('entertainment', 'Entertainment'),
+        ('other', 'Other'),
+    ]
+    
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
+    description = models.TextField(blank=True)
+    date = models.DateField(default=timezone.now)
 
-    def __str__(self):
-        return f"{self.category} - {self.amount} руб. ({self.date.strftime('%Y-%m-%d')})"
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'amount': float(self.amount),
+            'category': self.category,
+            'description': self.description,
+            'date': self.date.strftime('%Y-%m-%d')
+        }
