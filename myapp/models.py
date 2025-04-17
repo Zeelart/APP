@@ -6,6 +6,9 @@ class Expense(models.Model):
     description = models.TextField(blank=True, null=True)
     date = models.DateField()
 
+    def __str__(self):
+        return f"{self.category} - {self.amount} ({self.date})"
+
     def to_dict(self):
         return {
             'id': self.id,
